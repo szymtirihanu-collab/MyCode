@@ -73,7 +73,7 @@ The agent's file and command tools depend on model/API support for OpenAI-compat
 ## NVIDIA NIM
 
 - Base URL: `https://integrate.api.nvidia.com/v1`
-- Default model: `qwen/qwen2.5-coder-32b-instruct`
+- Default model: `deepseek-ai/deepseek-v4.1-flash`
 
 Use `/models` to list models, or `/model MODEL_ID` to enter a model ID manually.
 
