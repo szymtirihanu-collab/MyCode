@@ -1,9 +1,8 @@
 #!/usr/bin/env python3
-"""MyCode - lightweight NVIDIA NIM coding assistant for iSH/Alpine."""
+"""MyCode - NVIDIA NIM coding assistant for Linux x86_64 and other Python platforms."""
 
 import getpass
 import json
-import os
 import sys
 import urllib.error
 import urllib.request
@@ -62,17 +61,13 @@ def save_config(config):
         pass
 
 
-def request_json(url, api_key, method="GET", payload=None, timeout=45):
+def request_json(url, api_key, timeout=45):
     headers = {
         "Authorization": "Bearer " + api_key,
         "Accept": "application/json",
         "User-Agent": "MyCode/0.1",
     }
-    data = None
-    if payload is not None:
-        headers["Content-Type"] = "application/json"
-        data = json.dumps(payload).encode("utf-8")
-    request = urllib.request.Request(url, data=data, headers=headers, method=method)
+    request = urllib.request.Request(url, headers=headers)
     try:
         with urllib.request.urlopen(request, timeout=timeout) as response:
             raw = response.read().decode("utf-8", errors="replace")
@@ -144,7 +139,7 @@ def ensure_key(config):
     print("NVIDIA NIM API key required.")
     key = getpass.getpass("Paste API key (input hidden): ").strip()
     if not key:
-        print("No key entered. You can add one later with /key.")
+        print("No key entered. Add one later with /key.")
         return
     config["api_key"] = key
     save_config(config)
@@ -161,7 +156,7 @@ MyCode commands
   /models               List models available from the API
   /model MODEL_ID       Select a model
   /temperature VALUE    Set temperature from 0 to 2
-  /max TOKENS            Set maximum output tokens
+  /max TOKENS           Set maximum output tokens
   /base URL             Set API base URL
   /workspace PATH       Set the project directory
   /attach PATH          Attach a text file as coding context
@@ -193,6 +188,7 @@ def main():
     history = [{"role": "system", "content": SYSTEM_PROMPT}]
 
     print("\n  MYCODE  /  NVIDIA NIM")
+    print("  Platform: Linux / x86_64 (Python)")
     print("  Model: {}".format(config["model"]))
     print("  Workspace: {}".format(workspace))
     print("  Type /help for commands.\n")
@@ -247,8 +243,7 @@ def main():
                 if not models:
                     print("No model list returned by this endpoint.")
                 for item in models:
-                    mid = item.get("id", "(unknown id)")
-                    print("  " + str(mid))
+                    print("  " + str(item.get("id", "(unknown id)")))
             except Exception as exc:
                 print("Could not fetch models:", exc)
             continue
@@ -283,7 +278,7 @@ def main():
             continue
         if user_text.startswith("/base "):
             value = user_text[6:].strip().rstrip("/")
-            if value.startswith("https://") or value.startswith("http://"):
+            if value.startswith(("https://", "http://")):
                 config["base_url"] = value
                 save_config(config)
                 print("API base URL updated.")
