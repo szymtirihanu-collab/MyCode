@@ -6,7 +6,7 @@ from pathlib import Path
 APP_DIR = Path.home() / ".config" / "mycode"
 CONFIG_PATH = APP_DIR / "config.json"
 BASE = "https://integrate.api.nvidia.com/v1"
-MODEL = "qwen/qwen2.5-coder-32b-instruct"
+MODEL = "deepseek-ai/deepseek-v4.1-flash"
 RESET="\033[0m"; DIM="\033[2m"; BOLD="\033[1m"; CYAN="\033[96m"; GREEN="\033[92m"; YELLOW="\033[93m"; RED="\033[91m"; GRAY="\033[90m"
 SYSTEM = """You are MyCode, an autonomous coding agent working in the user's selected Linux project directory.
 Use the provided tools to inspect files, search/list the project, make requested code changes, and run tests.
